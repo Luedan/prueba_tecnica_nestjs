@@ -5,6 +5,9 @@ import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+/**
+ * Servicio para la gestión de productos.
+ */
 @Injectable()
 export class ProductService {
   constructor(
@@ -12,6 +15,13 @@ export class ProductService {
     private readonly _productRepository: Repository<Product>,
   ) {}
 
+  /**
+   * Crea un nuevo producto.
+   *
+   * @param createProductDto - Objeto que contiene los datos del producto a crear.
+   * @returns Una promesa que se resuelve con el producto creado.
+   * @throws {HttpException} Si ocurre un error al crear el producto.
+   */
   async create(createProductDto: CreateProductDto): Promise<Product> {
     try {
       const newProduct = await this._productRepository.insert(createProductDto);
@@ -32,6 +42,12 @@ export class ProductService {
     }
   }
 
+  /**
+   * Obtiene todos los productos.
+   *
+   * @returns Una promesa que se resuelve con la lista de productos.
+   * @throws {HttpException} Si ocurre un error al obtener los productos.
+   */
   async findAll(): Promise<Product[]> {
     try {
       const products = await this._productRepository.find();
@@ -45,6 +61,14 @@ export class ProductService {
     }
   }
 
+  /**
+   * Obtiene un producto por su identificador.
+   *
+   * @param id - Identificador del producto.
+   * @returns Una promesa que se resuelve con el producto encontrado.
+   * @throws {HttpException} Si ocurre un error al obtener el producto.
+   * @throws {NotFoundException} Si el producto no existe.
+   */
   async findOne(id: number): Promise<Product> {
     try {
       const product = await this._productRepository.findOne({ where: { id } });
@@ -62,6 +86,15 @@ export class ProductService {
     }
   }
 
+  /**
+   * Actualiza un producto.
+   *
+   * @param id - Identificador del producto.
+   * @param updateProductDto - Objeto que contiene los datos del producto a actualizar.
+   * @returns Una promesa que se resuelve con el producto actualizado.
+   * @throws {HttpException} Si ocurre un error al actualizar el producto.
+   * @throws {NotFoundException} Si el producto no existe.
+   */
   async update(
     id: number,
     updateProductDto: UpdateProductDto,
@@ -86,6 +119,14 @@ export class ProductService {
     }
   }
 
+  /**
+   * Elimina un producto.
+   *
+   * @param id - Identificador del producto.
+   * @returns Una promesa que se resuelve con un booleano.
+   * @throws {HttpException} Si ocurre un error al eliminar el producto.
+   * @throws {NotFoundException} Si el producto no existe.
+   */
   async remove(id: number): Promise<boolean> {
     try {
       await this.findOne(id);

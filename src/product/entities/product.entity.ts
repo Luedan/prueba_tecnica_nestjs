@@ -6,6 +6,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+/**
+ * Entidad que representa un producto
+ */
 @Entity({
   name: 'products',
 })

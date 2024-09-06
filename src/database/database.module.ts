@@ -3,6 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from 'src/product/entities/product.entity';
 
+/**
+ * Módulo para la configuración de la base de datos.
+ */
 @Module({
   imports: [
     ConfigModule.forRoot({
