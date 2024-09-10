@@ -4,6 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryProductDto } from './dto/Query-prodcut.dto';
 
 /**
  * Servicio para la gestión de productos.
@@ -37,7 +38,7 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(
         `Algo salio mal creando el producto error: ${error}`,
-        500,
+        error.code || 500,
       );
     }
   }
@@ -48,15 +49,24 @@ export class ProductService {
    * @returns Una promesa que se resuelve con la lista de productos.
    * @throws {HttpException} Si ocurre un error al obtener los productos.
    */
-  async findAll(): Promise<Product[]> {
+  async findAll(query?: QueryProductDto): Promise<Product[]> {
     try {
-      const products = await this._productRepository.find();
+      console.log(query);
+
+      const limit = +query?.limit;
+
+      const page = +query.offset * limit;
+
+      const products = await this._productRepository.find({
+        take: limit,
+        skip: page,
+      });
 
       return products;
     } catch (error) {
       throw new HttpException(
         `Algo salio mal obteniendo todos los productos error: ${error}`,
-        500,
+        error.code || 500,
       );
     }
   }
@@ -81,7 +91,28 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(
         `Algo salio mal obteniendo el producto error: ${error}`,
-        500,
+        error.code || 500,
+      );
+    }
+  }
+
+  async findByName(name: string) {
+    try {
+      const product = await this._productRepository.findOne({
+        where: { nombre: name },
+      });
+
+      if (!product) {
+        throw new NotFoundException(
+          `El producto con el nombre ${name} no existe`,
+        );
+      }
+
+      return product;
+    } catch (error) {
+      throw new HttpException(
+        `Algo salio mal obteniendo el producto error: ${error}`,
+        error.code || 500,
       );
     }
   }
@@ -114,7 +145,7 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(
         `Algo salio mal actualizando el producto error: ${error}`,
-        500,
+        error.code || 500,
       );
     }
   }
@@ -137,7 +168,7 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(
         `Algo salio mal eliminando el producto error: ${error}`,
-        500,
+        error.code || 500,
       );
     }
   }

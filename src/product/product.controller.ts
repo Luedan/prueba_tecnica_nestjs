@@ -7,17 +7,23 @@ import {
   ParseIntPipe,
   Put,
   Post,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { QueryProductDto } from './dto/Query-prodcut.dto';
 
 /**
  * Controlador para la gestión de productos.
  */
 @Controller('products')
 @ApiTags('Products')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -32,14 +38,19 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
+  @Get('findByName/:name')
+  findByName(@Param('name') name: string) {
+    return this.productService.findByName(name);
+  }
+
   /**
    * Obtiene todos los productos.
    *
    * @returns Lista de productos.
    */
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query() query: QueryProductDto) {
+    return this.productService.findAll(query);
   }
 
   /**

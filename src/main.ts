@@ -17,6 +17,7 @@ async function bootstrap() {
     .setTitle('API INVENTORY - PRUEBA TÉCNICA')
     .setDescription('UNA API PARA GESTIONAR INVENTARIO DE PRODUCTOS')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/docs', app, document);

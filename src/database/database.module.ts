@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from 'src/product/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
 
 /**
  * Módulo para la configuración de la base de datos.
@@ -14,7 +15,7 @@ import { Product } from 'src/product/entities/product.entity';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_CONNECTION_STRING,
-      entities: [Product],
+      entities: [Product, User],
       synchronize: true,
       logging: true,
     }),
